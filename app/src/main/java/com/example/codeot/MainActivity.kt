@@ -1,52 +1,34 @@
 package com.example.codeot
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Base64
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.Toast
+import androidx.webkit.WebViewAssetLoader
+import com.example.codeot.web.Client
 
 class MainActivity : AppCompatActivity() {
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        webViewSetup()
-    }
+        val myWebLoader = WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
 
-    private fun webViewSetup() {
-        val html: String = """
-            <html>
-                <head>
-                    <title>Hello World</title>
-                </head>
-                <body>
-                    <textarea id="source"></textarea>
-                    <script type="text/javascript">
-                        let msg;
-                        const source = document.getElementById("source");
-                        
-                        source.addEventListener("input", handleTextChange);
-                        
-                        function handleTextChange(e) {
-                            Android.handleTextChange(e.target.value)
-                        }
-                    </script>
-                </body>
-            </html>
-        """.trimIndent()
-
-        var message: String = ""
-        val myWebApp = WebAppInterface(this)
+        var message = ""
+        val myWebApp = Codeot(this)
         myWebApp.onTextChange { msg -> message = msg }
 
         val  myWebView: WebView = findViewById(R.id.my_webView)
-        myWebView.webViewClient = WebViewClient()
+        myWebView.webViewClient = Client(myWebLoader)
         myWebView.settings.javaScriptEnabled = true
+        myWebView.settings.allowFileAccess = true
         myWebView.addJavascriptInterface(myWebApp, "Android")
-        myWebView.loadData(html, "text/html", "utf-8")
+        myWebView.loadUrl("file:///android_asset/index.html")
 
         val myButton: Button = findViewById(R.id.my_button)
         myButton.setOnClickListener { Toast.makeText(this, message, Toast.LENGTH_LONG).show() }

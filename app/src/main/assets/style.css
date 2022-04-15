@@ -1,0 +1,19 @@
+button {
+    padding: 1rem;
+}
+
+main {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    background: black;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.code-editor {
+    align-self: stretch;
+    flex-grow: 1;
+    height: 100%;
+}

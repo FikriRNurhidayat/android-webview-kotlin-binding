@@ -6,7 +6,7 @@ import android.widget.Toast
 
 typealias TextChangeListener = (String) -> Unit
 
-class WebAppInterface(private val mContext: Context) {
+class Codeot(private val mContext: Context) {
     private lateinit var onTextChangeListener: TextChangeListener
 
     @JavascriptInterface
